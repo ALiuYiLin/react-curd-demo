@@ -1,13 +1,15 @@
 import { useState } from 'react'
-import { Form, message } from 'antd'
+import { Form } from 'antd'
 import { useAppStore } from '../../store'
 
 // 定义用户类型
 interface User {
-  id: string
+  id: number  // 改为 number 类型
   name: string
   email: string
   age?: number
+  created_at?: string
+  updated_at?: string
 }
 
 export function useOptions() {
@@ -43,8 +45,12 @@ export function useOptions() {
   }
 
   // 处理删除用户
-  const handleDelete = (id: string) => {
-    deleteUser(id)
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteUser(id)
+    } catch (error) {
+      // 错误处理已在 store 中处理
+    }
   }
 
   // 处理表单提交
@@ -54,18 +60,17 @@ export function useOptions() {
       
       if (editingUser) {
         // 更新用户
-        updateUser(editingUser.id, values)
-        message.success('用户更新成功')
+        await updateUser(editingUser.id, values)
       } else {
         // 添加用户
-        addUser(values)
-        message.success('用户添加成功')
+        await addUser(values)
       }
       
       setIsModalOpen(false)
       form.resetFields()
     } catch (error) {
-      console.error('表单验证失败:', error)
+      // 表单验证失败或 API 调用失败
+      console.error('操作失败:', error)
     }
   }
 

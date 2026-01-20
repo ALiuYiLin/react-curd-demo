@@ -1,11 +1,13 @@
-import { Table, Button, Space, Popconfirm, message } from 'antd'
+import { Table, Button, Space, Popconfirm } from 'antd'
 
 // 定义用户类型
 interface User {
-  id: string
+  id: number  // 改为 number 类型
   name: string
   email: string
   age?: number
+  created_at?: string
+  updated_at?: string
 }
 
 interface UserTableProps {
@@ -14,7 +16,7 @@ interface UserTableProps {
   searchText: string
   totalUsers: number
   onEdit: (user: User) => void
-  onDelete: (id: string) => void
+  onDelete: (id: number) => void  // 改为 number 类型
   onRowClick: (user: User) => void
 }
 
@@ -29,9 +31,9 @@ export function UserTable({
 }: UserTableProps) {
   
   // 处理删除用户
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: number) => {
     onDelete(id)
-    message.success('用户删除成功')
+    // message.success 已在 store 中处理
   }
 
   // 表格列定义
