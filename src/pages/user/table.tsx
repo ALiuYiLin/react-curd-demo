@@ -1,8 +1,9 @@
-import { Table as  AntDTable, Button, Space, Popconfirm } from 'antd'
+import { Table as AntDTable, Button, Space, Popconfirm } from 'antd'
+import { useBase, useUI, useOptions } from '../../store'
 
 // 定义用户类型
 interface User {
-  id: number  // 改为 number 类型
+  id: number
   name: string
   email: string
   age?: number
@@ -10,31 +11,11 @@ interface User {
   updated_at?: string
 }
 
-interface TableProps {
-  dataSource: User[]
-  loading: boolean
-  onEdit: (user: User) => void
-  onDelete: (id: number) => void  // 改为 number 类型
-  onRowClick: (user: User) => void
-  onView: (user: User) => void  // 新增查看功能
-}
+export function Table() {
+  const { users } = useBase()
+  const { loading } = useUI()
+  const { handleView, handleEdit, deleteUser, setCurrentUser } = useOptions()
 
-export function Table({
-  dataSource,
-  loading,
-  onEdit,
-  onDelete,
-  onRowClick,
-  onView
-}: TableProps) {
-  
-  // 处理删除用户
-  const handleDelete = (id: number) => {
-    onDelete(id)
-    // message.success 已在 store 中处理
-  }
-
-  // 表格列定义
   const columns = [
     {
       title: 'ID',
@@ -66,20 +47,20 @@ export function Table({
         <Space size="middle">
           <Button 
             type="link" 
-            onClick={() => onView(record)}
+            onClick={() => handleView(record)}
           >
             查看
           </Button>
           <Button 
             type="link" 
-            onClick={() => onEdit(record)}
+            onClick={() => handleEdit(record)}
           >
             编辑
           </Button>
           
           <Popconfirm
             title="确定要删除这个用户吗？"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => deleteUser(record.id)}
             okText="确定"
             cancelText="取消"
           >
@@ -95,7 +76,7 @@ export function Table({
   return (
     <AntDTable
       columns={columns}
-      dataSource={dataSource}
+      dataSource={users}
       rowKey="id"
       loading={loading}
       pagination={{
@@ -105,7 +86,7 @@ export function Table({
         showTotal: (total) => `共 ${total} 条记录`,
       }}
       onRow={(record) => ({
-        onClick: () => onRowClick(record),
+        onClick: () => setCurrentUser(record),
       })}
     />
   )

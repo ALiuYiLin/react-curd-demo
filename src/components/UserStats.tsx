@@ -1,10 +1,10 @@
 import { Card, Statistic, Avatar } from 'antd'
 import  { UserOutlined, TeamOutlined } from '@ant-design/icons'
-import { useUsers, useCurrentUser } from '../store'
+import { useBase, useUI } from '../store'
 
 export function UserStats() {
-    const users = useUsers()
-    const currentUser = useCurrentUser()
+    const { users } = useBase()
+    const { currentUser } = useUI()
 
     const totalUsers = users.length
     const averageAge = users.length > 0 
