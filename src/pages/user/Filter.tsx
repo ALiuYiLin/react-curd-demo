@@ -17,40 +17,19 @@ export function Filter({
   showResetButton = true
 }: FilterProps) {
   const { searchText } = useUI()
-  const { handleSearch: onSearch, handleReset: onReset } = useOptions()
+  const { handleSearch, handleReset } = useOptions()
   
-  const [inputValue, setInputValue] = useState(searchText)
-
-  useEffect(() => {
-    setInputValue(searchText)
-  }, [searchText])
-
-  const handleSearch = (searchValue: string) => {
-    setInputValue(searchValue)
-    onSearch(searchValue)
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value
-    setInputValue(newValue)
-    onSearch(newValue)
-  }
-
-  const handleReset = () => {
-    setInputValue('')
-    onReset()
-  }
 
   return (
     <Space.Compact style={style}>
       <Search
-        value={inputValue}
+        value={searchText}
         placeholder={placeholder}
         allowClear
         enterButton="搜索"
         size="large"
         onSearch={handleSearch}
-        onChange={handleChange}
+        onChange={(e)=>handleSearch(e.target.value)}
         style={{ flex: 1 }}
       />
       {showResetButton && (

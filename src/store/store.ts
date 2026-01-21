@@ -1,16 +1,19 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { createUserSlice, type UserSlice } from './slices/userSlice'
+import { type UserSlice } from './slices/userSlice'
 import { createUISlice, type UISlice } from './slices/uiSlice'
 import { ModalMode, MODAL_TITLES } from './types'
+import  { type ActionSlice, createActionSlice } from './slices/actionSlice'
+import { createBaseSlice } from './slices/baseSlice'
 
-export type AppState = UserSlice & UISlice
+export type AppState = UserSlice & UISlice & ActionSlice
 
 export const useAppStore = create<AppState>()(
   devtools(
     (...args) => ({
-      ...createUserSlice(...args),
+      ...createBaseSlice(...args),
       ...createUISlice(...args),
+      ...createActionSlice(...args),
     }),
     { name: 'app-store' }
   )
