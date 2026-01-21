@@ -1,26 +1,28 @@
-import { Form, Input, InputNumber } from 'antd'
+import { Form as AntdForm, Input, InputNumber } from 'antd'
 import type { FormInstance } from 'antd/es/form'
 
-interface UserFormProps {
+interface FormProps {
   form: FormInstance
+  disabled?: boolean  // 新增禁用属性
 }
 
-export function UserForm({ form }: UserFormProps) {
+export function Form({ form, disabled = false }: FormProps) {
   return (
-    <Form
+    <AntdForm
       form={form}
       layout="vertical"
       name="userForm"
+      disabled={disabled}  // 应用禁用状态
     >
-      <Form.Item
+      <AntdForm.Item
         label="姓名"
         name="name"
         rules={[{ required: true, message: '请输入姓名' }]}
       >
         <Input placeholder="请输入姓名" />
-      </Form.Item>
+      </AntdForm.Item>
 
-      <Form.Item
+      <AntdForm.Item
         label="邮箱"
         name="email"
         rules={[
@@ -29,9 +31,9 @@ export function UserForm({ form }: UserFormProps) {
         ]}
       >
         <Input placeholder="请输入邮箱" />
-      </Form.Item>
+      </AntdForm.Item>
 
-      <Form.Item
+      <AntdForm.Item
         label="年龄"
         name="age"
         rules={[{ type: 'number', min: 1, max: 120, message: '年龄必须在1-120之间' }]}
@@ -42,7 +44,7 @@ export function UserForm({ form }: UserFormProps) {
           min={1}
           max={120}
         />
-      </Form.Item>
-    </Form>
+      </AntdForm.Item>
+    </AntdForm>
   )
 }

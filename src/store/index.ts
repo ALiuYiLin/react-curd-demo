@@ -1,36 +1,36 @@
-import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
-import { UserApi } from '../api'
-import { executeApiAction } from '../utils/api'
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
+import { UserApi } from "../api";
+import { message } from "antd";
 
 // 用户状态接口
 interface User {
-  id: number  // 改为 number 类型，与 API 保持一致
-  name: string
-  email: string
-  age?: number
-  created_at?: string
-  updated_at?: string
+  id: number; // 改为 number 类型，与 API 保持一致
+  name: string;
+  email: string;
+  age?: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
 // 应用状态接口
 interface AppState {
   // 用户相关状态
-  users: User[]
-  currentUser: User | null
-  loading: boolean
-  error: string | null
-  
+  users: User[];
+  currentUser: User | null;
+  loading: boolean;
+  error: string | null;
+
   // 用户操作
-  addUser: (user: Omit<User, 'id' | 'created_at' | 'updated_at'>) => Promise<void>
-  updateUser: (id: number, updates: Partial<User>) => Promise<void>
-  deleteUser: (id: number) => Promise<void>
-  setCurrentUser: (user: User | null) => void
-  
+  addUser: (
+    user: Omit<User, "id" | "created_at" | "updated_at">
+  ) => Promise<void>;
+  updateUser: (id: number, updates: Partial<User>) => Promise<void>;
+  deleteUser: (id: number) => Promise<void>;
+  setCurrentUser: (user: User | null) => void;
+
   // 异步操作
-  fetchUsers: (searchName?: string) => Promise<void>
-  setLoading: (loading: boolean) => void
-  setError: (error: string | null) => void
+  fetchUsers: (searchName?: string) => Promise<void>;
 }
 
 // 创建 Zustand store
@@ -41,108 +41,96 @@ export const useAppStore = create<AppState>()(
       users: [],
       currentUser: null,
       loading: false,
-      error: null,
 
-      // 用户操作
-      addUser: async (userData) => {
-        const { setLoading, setError, fetchUsers } = get()
-        await executeApiAction(
-          () => UserApi.createUser(userData),
-          '用户创建成功',
-          '创建用户失败',
-          setLoading,
-          setError,
-          fetchUsers
-        )
-      },
-
-      updateUser: async (id, updates) => {
-        const { setLoading, setError, fetchUsers } = get()
-        await executeApiAction(
-          () => UserApi.updateUser(id, updates),
-          '用户更新成功',
-          '更新用户失败',
-          setLoading,
-          setError,
-          fetchUsers
-        )
-      },
-
-      deleteUser: async (id) => {
-        const { setLoading, setError, fetchUsers } = get()
-        await executeApiAction(
-          () => UserApi.deleteUser(id),
-          '用户删除成功',
-          '删除用户失败',
-          setLoading,
-          setError,
-          async () => {
-            // 删除用户的特殊逻辑：如果删除的是当前用户，清空当前用户
-            const { currentUser } = get()
-            if (currentUser?.id === id) {
-              set({ currentUser: null })
-            }
-            // 重新获取用户列表
-            await fetchUsers()
-          }
-        )
-      },
-
-      setCurrentUser: (user) => {
-        set({ currentUser: user }, false, 'setCurrentUser')
-      },
-
-      setLoading: (loading) => {
-        set({ loading }, false, 'setLoading')
-      },
-
-      setError: (error) => {
-        set({ error }, false, 'setError')
-      },
-
-      // 获取用户数据
-      fetchUsers: async (searchName) => {
-        const { setLoading, setError } = get()
-        setLoading(true)
-        setError(null)
-        
+      // 获取用户列表
+      fetchUsers: async (searchName?: string) => {
+        set({ loading: true });
         try {
-          const response = await UserApi.getUsers(searchName ? { name: searchName } : undefined)
-          if (response.code === 200) {
-            set({ users: response.data }, false, 'fetchUsers')
-          } else {
-            throw new Error(response.msg || '获取用户列表失败')
+          const response = await UserApi.getUsers({ name: searchName });
+          if (response.code !== 200) {
+            throw new Error(response.msg);
           }
+          set({ users: response.data, loading: false });
         } catch (error: any) {
-          const errorMsg = error.response?.data?.msg || error.message || '获取用户列表失败'
-          setError(errorMsg)
-          console.warn('API 调用失败，使用模拟数据:', errorMsg)
-          
-          // 如果是网络错误，使用模拟数据
-          const mockUsers: User[] = [
-            { id: 1, name: '张三', email: 'zhangsan@example.com', age: 25, created_at: '2026-01-20 08:56:34', updated_at: '2026-01-20 08:56:34' },
-            { id: 2, name: '李四', email: 'lisi@example.com', age: 30, created_at: '2026-01-20 08:56:34', updated_at: '2026-01-20 08:56:34' },
-            { id: 3, name: '王五', email: 'wangwu@example.com', age: 28, created_at: '2026-01-20 08:56:34', updated_at: '2026-01-20 08:56:34' },
-          ]
-          
-          // 如果有搜索条件，过滤模拟数据
-          const filteredUsers = searchName 
-            ? mockUsers.filter(user => user.name.includes(searchName))
-            : mockUsers
-            
-          set({ users: filteredUsers }, false, 'fetchUsers')
-        } finally {
-          setLoading(false)
+          const errorMsg = error.response?.data?.msg || error.message || '获取用户列表失败';
+          set({ loading: false });
+          message.error(errorMsg);
+          throw error;
         }
       },
+
+      // 创建用户
+      addUser: async (userData: Omit<User, "id" | "created_at" | "updated_at">) => {
+        set({ loading: true });
+        try {
+          const response = await UserApi.createUser(userData);
+          if (response.code !== 200) {
+            throw new Error(response.msg);
+          }
+          message.success(response.msg || '用户创建成功');
+          // 重新获取用户列表
+          await get().fetchUsers();
+        } catch (error: any) {
+          const errorMsg = error.response?.data?.msg || error.message || '创建用户失败';
+          set({ loading: false });
+          message.error(errorMsg);
+          throw error;
+        }
+      },
+
+      // 更新用户
+      updateUser: async (id: number, updates: Partial<User>) => {
+        set({ loading: true });
+        try {
+          const response = await UserApi.updateUser(id, updates);
+          if (response.code !== 200) {
+            throw new Error(response.msg);
+          }
+          message.success(response.msg || '用户更新成功');
+          // 重新获取用户列表
+          await get().fetchUsers();
+        } catch (error: any) {
+          const errorMsg = error.response?.data?.msg || error.message || '更新用户失败';
+          set({ loading: false });
+          message.error(errorMsg);
+          throw error;
+        }
+      },
+
+      // 删除用户
+      deleteUser: async (id: number) => {
+        set({ loading: true });
+        try {
+          const response = await UserApi.deleteUser(id);
+          if (response.code !== 200) {
+            throw new Error(response.msg);
+          }
+          message.success(response.msg || '用户删除成功');
+          // 如果删除的是当前用户，清空当前用户
+          const { currentUser } = get();
+          if (currentUser?.id === id) {
+            set({ currentUser: null });
+          }
+          // 重新获取用户列表
+          await get().fetchUsers();
+        } catch (error: any) {
+          const errorMsg = error.response?.data?.msg || error.message || '删除用户失败';
+          set({ loading: false });
+          message.error(errorMsg);
+          throw error;
+        }
+      },
+
+      // 辅助方法
+      setCurrentUser: (user: User | null) => set({ currentUser: user }),
     }),
     {
-      name: 'app-store', // DevTools 中显示的名称
+      name: "app-store", // DevTools 中显示的名称
     }
   )
-)
+);
 
 // 导出选择器 hooks（可选，用于性能优化）
-export const useUsers = () => useAppStore((state) => state.users)
-export const useCurrentUser = () => useAppStore((state) => state.currentUser)
-export const useLoading = () => useAppStore((state) => state.loading)
+export const useUsers = () => useAppStore((state) => state.users);
+export const useCurrentUser = () => useAppStore((state) => state.currentUser);
+export const useLoading = () => useAppStore((state) => state.loading);

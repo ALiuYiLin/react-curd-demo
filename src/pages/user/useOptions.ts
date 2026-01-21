@@ -12,35 +12,71 @@ interface User {
   updated_at?: string
 }
 
+// 定义模态框模式枚举
+export const ModalMode = {
+  CLOSED: 'closed',
+  ADD: 'add',
+  EDIT: 'edit',
+  VIEW: 'view'
+} as const
+
+export type ModalModeType = typeof ModalMode[keyof typeof ModalMode]
+
+// 模态框标题映射
+export const MODAL_TITLES: Record<ModalModeType, string> = {
+  [ModalMode.CLOSED]: '',
+  [ModalMode.ADD]: '添加用户',
+  [ModalMode.EDIT]: '编辑用户',
+  [ModalMode.VIEW]: '查看用户'
+}
+
 export function useOptions() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [modalMode, setModalMode] = useState<ModalModeType>(ModalMode.CLOSED)
+  const [currentUser, setCurrentUser] = useState<User | null>(null)  // 统一的用户状态
   const [searchText, setSearchText] = useState('')
   const [form] = Form.useForm()
 
-  const { addUser, updateUser, deleteUser } = useAppStore()
+  const { addUser, updateUser, deleteUser, fetchUsers } = useAppStore()
+
+  // 计算属性
+  const isModalOpen = modalMode !== ModalMode.CLOSED
+  const isViewMode = modalMode === ModalMode.VIEW
+  const isEditMode = modalMode === ModalMode.EDIT
+  const isAddMode = modalMode === ModalMode.ADD
+  const modalTitle = MODAL_TITLES[modalMode]
 
   // 处理搜索
   const handleSearch = (value: string) => {
     setSearchText(value)
+    // 调用API获取过滤后的数据
+    fetchUsers(value.trim() || undefined)
   }
 
   // 处理重置
   const handleReset = () => {
     setSearchText('')
+    // 重置时获取所有数据
+    fetchUsers()
   }
 
   // 处理添加用户
   const handleAdd = () => {
-    setEditingUser(null)
-    setIsModalOpen(true)
+    setCurrentUser(null)
+    setModalMode(ModalMode.ADD)
     form.resetFields()
+  }
+
+  // 处理查看用户
+  const handleView = (user: User) => {
+    setCurrentUser(user)
+    setModalMode(ModalMode.VIEW)
+    form.setFieldsValue(user)
   }
 
   // 处理编辑用户
   const handleEdit = (user: User) => {
-    setEditingUser(user)
-    setIsModalOpen(true)
+    setCurrentUser(user)
+    setModalMode(ModalMode.EDIT)
     form.setFieldsValue(user)
   }
 
@@ -58,15 +94,16 @@ export function useOptions() {
     try {
       const values = await form.validateFields()
       
-      if (editingUser) {
+      if (isEditMode && currentUser) {
         // 更新用户
-        await updateUser(editingUser.id, values)
-      } else {
+        await updateUser(currentUser.id, values)
+      } else if (isAddMode) {
         // 添加用户
         await addUser(values)
       }
       
-      setIsModalOpen(false)
+      setModalMode(ModalMode.CLOSED)
+      setCurrentUser(null)
       form.resetFields()
     } catch (error) {
       // 表单验证失败或 API 调用失败
@@ -76,14 +113,20 @@ export function useOptions() {
 
   // 处理取消
   const handleCancel = () => {
-    setIsModalOpen(false)
+    setModalMode(ModalMode.CLOSED)
+    setCurrentUser(null)
     form.resetFields()
   }
 
   return {
     // 状态
+    modalMode,
+    currentUser,
     isModalOpen,
-    editingUser,
+    isViewMode,
+    isEditMode,
+    isAddMode,
+    modalTitle,
     searchText,
     form,
     
@@ -91,6 +134,7 @@ export function useOptions() {
     handleSearch,
     handleReset,
     handleAdd,
+    handleView,
     handleEdit,
     handleDelete,
     handleSubmit,

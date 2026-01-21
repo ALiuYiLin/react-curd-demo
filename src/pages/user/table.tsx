@@ -1,4 +1,4 @@
-import { Table, Button, Space, Popconfirm } from 'antd'
+import { Table as  AntDTable, Button, Space, Popconfirm } from 'antd'
 
 // 定义用户类型
 interface User {
@@ -10,25 +10,23 @@ interface User {
   updated_at?: string
 }
 
-interface UserTableProps {
+interface TableProps {
   dataSource: User[]
   loading: boolean
-  searchText: string
-  totalUsers: number
   onEdit: (user: User) => void
   onDelete: (id: number) => void  // 改为 number 类型
   onRowClick: (user: User) => void
+  onView: (user: User) => void  // 新增查看功能
 }
 
-export function UserTable({
+export function Table({
   dataSource,
   loading,
-  searchText,
-  totalUsers,
   onEdit,
   onDelete,
-  onRowClick
-}: UserTableProps) {
+  onRowClick,
+  onView
+}: TableProps) {
   
   // 处理删除用户
   const handleDelete = (id: number) => {
@@ -63,15 +61,22 @@ export function UserTable({
     {
       title: '操作',
       key: 'action',
-      width: 200,
+      width: 250,
       render: (_: any, record: User) => (
         <Space size="middle">
+          <Button 
+            type="link" 
+            onClick={() => onView(record)}
+          >
+            查看
+          </Button>
           <Button 
             type="link" 
             onClick={() => onEdit(record)}
           >
             编辑
           </Button>
+          
           <Popconfirm
             title="确定要删除这个用户吗？"
             onConfirm={() => handleDelete(record.id)}
@@ -88,7 +93,7 @@ export function UserTable({
   ]
 
   return (
-    <Table
+    <AntDTable
       columns={columns}
       dataSource={dataSource}
       rowKey="id"
@@ -97,10 +102,7 @@ export function UserTable({
         pageSize: 10,
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total) => 
-          searchText 
-            ? `搜索到 ${total} 条记录 (共 ${totalUsers} 条)`
-            : `共 ${total} 条记录`,
+        showTotal: (total) => `共 ${total} 条记录`,
       }}
       onRow={(record) => ({
         onClick: () => onRowClick(record),
