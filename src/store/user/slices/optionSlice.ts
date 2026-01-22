@@ -1,7 +1,7 @@
 import type { StateCreator } from "zustand";
 import { ModalMode, type Options, type Base, type UI } from "../types";
 
-export const createActionSlice: StateCreator<
+export const createOptionSlice: StateCreator<
   Options & Base & UI,
   [],
   [],

@@ -1,6 +1,6 @@
 import { Card, Statistic, Avatar } from 'antd'
 import  { UserOutlined, TeamOutlined } from '@ant-design/icons'
-import { STORE } from '../store'
+import { STORE } from '@/store'
 
 export function UserStats() {
     const { users } = STORE.UserStore.useBase()
