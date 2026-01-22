@@ -5,10 +5,12 @@ export { default as api } from './config'
 export { UserApi } from './userApi'
 export { CommentApi } from './commentApi'
 export { ProductApi } from './productApi'
+export { LeadApi } from './leadApi'
 
 // 类型定义
 export * from './types'
 export type { Product, CreateProductRequest, UpdateProductRequest, GetProductsParams } from './productApi'
+export type { Lead, CreateLeadRequest, UpdateLeadRequest, GetLeadsParams } from './leadApi'
 
 // 便捷方法
 export const userApi = {

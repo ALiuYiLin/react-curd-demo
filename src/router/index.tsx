@@ -3,6 +3,7 @@ import { Layout } from '@/layout'
 import { User } from '@/pages/user'
 import { NotFound } from '@/pages/not-found'
 import { Product } from '@/pages/product'
+import { Lead } from '@/pages/lead'
 
 export const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ export const router = createBrowserRouter([
         path: 'product',
         element: <Product />,
       },
+      {
+        path: 'lead',
+        element: <Lead />,
+      }
     ],
   },
   {
