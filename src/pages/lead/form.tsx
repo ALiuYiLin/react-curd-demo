@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Form as AntdForm, Input, InputNumber, Modal, Button } from 'antd'
+import { Form as AntdForm, Input, InputNumber, Select, DatePicker, Modal, Button } from 'antd'
 import { STORE } from '@/store'
 import { ModalMode } from '@/store/lead/types'
 
@@ -95,18 +95,39 @@ export function LeadFormModal() {
           label="来源"
           name="source"
         >
+          <Select placeholder="请选择来源" allowClear>
+            <Select.Option value="website">官网</Select.Option>
+            <Select.Option value="referral">转介绍</Select.Option>
+            <Select.Option value="advertisement">广告</Select.Option>
+            <Select.Option value="exhibition">展会</Select.Option>
+            <Select.Option value="cold_call">电销</Select.Option>
+            <Select.Option value="social_media">社交媒体</Select.Option>
+            <Select.Option value="other">其他</Select.Option>
+          </Select>
         </AntdForm.Item>
 
         <AntdForm.Item
           label="状态"
           name="status"
         >
+          <Select placeholder="请选择状态" allowClear>
+            <Select.Option value="new">新线索</Select.Option>
+            <Select.Option value="contacted">已联系</Select.Option>
+            <Select.Option value="following">跟进中</Select.Option>
+            <Select.Option value="converted">已转化</Select.Option>
+            <Select.Option value="lost">已流失</Select.Option>
+          </Select>
         </AntdForm.Item>
 
         <AntdForm.Item
           label="优先级"
           name="priority"
         >
+          <Select placeholder="请选择优先级" allowClear>
+            <Select.Option value="low">低</Select.Option>
+            <Select.Option value="medium">中</Select.Option>
+            <Select.Option value="high">高</Select.Option>
+          </Select>
         </AntdForm.Item>
 
         <AntdForm.Item
@@ -127,6 +148,10 @@ export function LeadFormModal() {
           label="跟进时间"
           name="followed_at"
         >
+          <DatePicker 
+            placeholder="请选择跟进时间" 
+            style={{ width: '100%' }}
+          />
         </AntdForm.Item>
 
       </AntdForm>

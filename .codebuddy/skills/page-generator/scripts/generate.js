@@ -129,6 +129,18 @@ function parseRules(rulesStr) {
 }
 
 /**
+ * 解析 options JSON
+ */
+function parseOptions(optionsStr) {
+  if (!optionsStr) return null;
+  try {
+    return JSON.parse(optionsStr);
+  } catch {
+    return null;
+  }
+}
+
+/**
  * 处理模板数据
  */
 function processTemplateData(pageName, entityLabel, fields) {
@@ -155,6 +167,8 @@ function processTemplateData(pageName, entityLabel, fields) {
       field: f.field,
       label: f.label,
       width: f.width || null,
+      component: f.component || 'Input',
+      options: parseOptions(f.options),
     }));
   
   // 表单字段
@@ -162,6 +176,7 @@ function processTemplateData(pageName, entityLabel, fields) {
     .filter(f => f.formShow === 'true')
     .map(f => {
       const rules = parseRules(f.rules);
+      const options = parseOptions(f.options);
       let min = null, max = null;
       if (rules) {
         const rulesArr = JSON.parse(rules);
@@ -177,6 +192,7 @@ function processTemplateData(pageName, entityLabel, fields) {
         component: f.component || 'Input',
         required: f.required === 'true',
         rules: rules,
+        options: options,
         min,
         max,
       };

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Form as AntdForm, Input, InputNumber, Modal, Button } from 'antd'
+import { Form as AntdForm, Input, InputNumber, Select, DatePicker, Modal, Button } from 'antd'
 import { STORE } from '@/store'
 import { ModalMode } from '@/store/{{pageName}}/types'
 
@@ -82,6 +82,19 @@ export function {{EntityName}}FormModal() {
 {{#if max}}
             max={ {{{max}}} }
 {{/if}}
+          />
+{{/ifEquals}}
+{{#ifEquals component "Select"}}
+          <Select placeholder="请选择{{{label}}}" allowClear>
+{{#each options}}
+            <Select.Option value="{{{value}}}">{{{label}}}</Select.Option>
+{{/each}}
+          </Select>
+{{/ifEquals}}
+{{#ifEquals component "DatePicker"}}
+          <DatePicker 
+            placeholder="请选择{{{label}}}" 
+            style=\{{ width: '100%' }}
           />
 {{/ifEquals}}
         </AntdForm.Item>

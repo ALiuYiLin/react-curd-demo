@@ -87,7 +87,7 @@ options,handleReset,() => void,action,,重置搜索,,[],void,"ui,base"
 
 **CSV 格式**:
 ```csv
-field,label,type,component,required,rules,width,searchable,tableShow,formShow
+field,label,type,component,required,rules,width,searchable,tableShow,formShow,options
 ```
 
 **字段说明**:
@@ -104,6 +104,7 @@ field,label,type,component,required,rules,width,searchable,tableShow,formShow
 | searchable | 是否可搜索 | true/false |
 | tableShow | 是否在表格显示 | true/false |
 | formShow | 是否在表单显示 | true/false |
+| options | Select枚举选项(JSON数组) | `[{"value":"new","label":"新建"}]` |
 
 **生成规则**:
 
@@ -116,8 +117,15 @@ field,label,type,component,required,rules,width,searchable,tableShow,formShow
 | TEXT 类型 | component=Input |
 | INTEGER 类型 | component=InputNumber |
 | DATETIME 类型 | component=DatePicker |
-| 有枚举值 | component=Select |
+| 有枚举值 | component=Select, options=枚举值数组 |
 | email 字段 | 添加邮箱验证规则 |
+
+**options 字段格式**:
+
+枚举值需转换为 JSON 数组，每个选项包含 `value` 和 `label`：
+```json
+[{"value":"枚举值","label":"中文显示"}]
+```
 
 ---
 
@@ -168,18 +176,18 @@ options,handleReset,() => void,action,,重置搜索,,[],void,"ui,base"
 ### 输出 2: `config/page/lead.csv`
 
 ```csv
-field,label,type,component,required,rules,width,searchable,tableShow,formShow
-id,ID,number,InputNumber,false,,80,false,true,false
-name,线索名称,string,Input,true,"[{""required"":true,""message"":""请输入线索名称""}]",,true,true,true
-phone,电话,string,Input,false,,,true,true,true
-email,邮箱,string,Input,false,"[{""type"":""email"",""message"":""请输入有效的邮箱地址""}]",,false,true,true
-company,公司名称,string,Input,false,,,true,true,true
-source,来源,string,Select,false,,,true,true,true
-status,状态,string,Select,false,,,true,true,true
-priority,优先级,string,Select,false,,,true,true,true
-assigned_to,负责人,string,Input,false,,,true,true,true
-remark,备注,string,Input,false,,,false,true,true
-followed_at,跟进时间,string,DatePicker,false,,,false,false,true
+field,label,type,component,required,rules,width,searchable,tableShow,formShow,options
+id,ID,number,InputNumber,false,,80,false,true,false,
+name,线索名称,string,Input,true,"[{""required"":true,""message"":""请输入线索名称""}]",,true,true,true,
+phone,电话,string,Input,false,,,true,true,true,
+email,邮箱,string,Input,false,"[{""type"":""email"",""message"":""请输入有效的邮箱地址""}]",,false,true,true,
+company,公司名称,string,Input,false,,,true,true,true,
+source,来源,string,Select,false,,,true,true,true,"[{""value"":""website"",""label"":""官网""},{""value"":""referral"",""label"":""转介绍""},{""value"":""advertisement"",""label"":""广告""},{""value"":""exhibition"",""label"":""展会""},{""value"":""cold_call"",""label"":""电销""},{""value"":""social_media"",""label"":""社交媒体""},{""value"":""other"",""label"":""其他""}]"
+status,状态,string,Select,false,,,true,true,true,"[{""value"":""new"",""label"":""新线索""},{""value"":""contacted"",""label"":""已联系""},{""value"":""following"",""label"":""跟进中""},{""value"":""converted"",""label"":""已转化""},{""value"":""lost"",""label"":""已流失""}]"
+priority,优先级,string,Select,false,,,true,true,true,"[{""value"":""low"",""label"":""低""},{""value"":""medium"",""label"":""中""},{""value"":""high"",""label"":""高""}]"
+assigned_to,负责人,string,Input,false,,,true,true,true,
+remark,备注,string,Input,false,,,false,true,true,
+followed_at,跟进时间,string,DatePicker,false,,,false,false,true,
 ```
 
 ---
