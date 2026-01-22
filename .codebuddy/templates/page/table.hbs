@@ -1,0 +1,78 @@
+import { Table as AntDTable, Button, Space, Popconfirm } from 'antd'
+import { STORE } from '@/store'
+
+// 定义{{entityLabel}}类型
+interface {{EntityName}} {
+{{#each entityFields}}
+  {{{field}}}{{#if optional}}?{{/if}}: {{{type}}}
+{{/each}}
+}
+
+export function Table() {
+  const { {{pluralName}}, delete{{EntityName}} } = STORE.{{EntityName}}Store.useBase()
+  const { loading, setCurrentUser } = STORE.{{EntityName}}Store.useUI()
+  const { handleView, handleEdit } = STORE.{{EntityName}}Store.useOptions()
+
+  const columns = [
+{{#each tableColumns}}
+    {
+      title: '{{{label}}}',
+      dataIndex: '{{{field}}}',
+      key: '{{{field}}}',
+{{#if width}}
+      width: {{{width}}},
+{{/if}}
+    },
+{{/each}}
+    {
+      title: '操作',
+      key: 'action',
+      width: 250,
+      render: (_: any, record: {{EntityName}}) => (
+        <Space size="middle">
+          <Button 
+            type="link" 
+            onClick={() => handleView(record)}
+          >
+            查看
+          </Button>
+          <Button 
+            type="link" 
+            onClick={() => handleEdit(record)}
+          >
+            编辑
+          </Button>
+          
+          <Popconfirm
+            title="确定要删除这个{{entityLabel}}吗？"
+            onConfirm={() => delete{{EntityName}}(record.id)}
+            okText="确定"
+            cancelText="取消"
+          >
+            <Button type="link" danger>
+              删除
+            </Button>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ]
+
+  return (
+    <AntDTable
+      columns={columns}
+      dataSource={ {{pluralName}} }
+      rowKey="id"
+      loading={loading}
+      pagination=\{{
+        pageSize: 10,
+        showSizeChanger: true,
+        showQuickJumper: true,
+        showTotal: (total) => `共 ${total} 条记录`,
+      }}
+      onRow={(record) => ({
+        onClick: () => setCurrentUser(record),
+      })}
+    />
+  )
+}

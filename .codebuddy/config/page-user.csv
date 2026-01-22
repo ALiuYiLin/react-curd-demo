@@ -1,0 +1,5 @@
+field,label,type,component,required,rules,width,searchable,tableShow,formShow
+id,ID,number,InputNumber,false,,80,false,true,false
+name,姓名,string,Input,true,"[{""required"":true,""message"":""请输入姓名""}]",,true,true,true
+email,邮箱,string,Input,true,"[{""required"":true,""message"":""请输入邮箱""},{""type"":""email"",""message"":""请输入有效的邮箱地址""}]",,true,true,true
+age,年龄,number,InputNumber,false,"[{""type"":""number"",""min"":1,""max"":120,""message"":""年龄必须在1-120之间""}]",80,false,true,true

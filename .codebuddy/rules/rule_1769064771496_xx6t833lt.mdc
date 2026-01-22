@@ -1,0 +1,106 @@
+---
+description: 
+alwaysApply: false
+enabled: true
+updatedAt: 2026-01-22T06:52:51.496Z
+provider: 
+---
+
+# Page Generator Skill
+
+通过 Handlebars 模板和 CSV 配置文件自动生成 CRUD 列表页面。
+
+## 使用命令
+
+```bash
+npm run gen:page <pageName> [entityLabel]
+# 或
+node .codebuddy/scripts/generate-page.js <pageName> [entityLabel]
+```
+
+示例: 
+- `npm run gen:page user 用户`
+- `npm run gen:page product 产品`
+
+## 文件结构
+
+```
+.codebuddy/
+├── config/
+│   └── page-{pageName}.csv  # 页面字段配置
+├── templates/page/          # HBS 模板
+│   ├── index.hbs
+│   ├── page.hbs
+│   ├── action.hbs
+│   ├── filter.hbs
+│   ├── table.hbs
+│   └── form.hbs
+├── scripts/
+│   └── generate-page.js     # 生成脚本
+└── output/pages/
+    └── {pageName}/          # 生成的页面
+```
+
+## CSV 配置格式
+
+路径: `.codebuddy/config/page-{pageName}.csv`
+
+| 字段 | 说明 | 示例 |
+|------|------|------|
+| field | 字段名 | name |
+| label | 显示标签 | 姓名 |
+| type | 数据类型: string/number/boolean | string |
+| component | 表单组件: Input/InputNumber | Input |
+| required | 是否必填 | true |
+| rules | 校验规则(JSON) | [{"required":true,"message":"请输入"}] |
+| width | 表格列宽 | 80 |
+| searchable | 是否可搜索 | true |
+| tableShow | 是否在表格显示 | true |
+| formShow | 是否在表单显示 | true |
+
+### CSV 示例
+
+```csv
+field,label,type,component,required,rules,width,searchable,tableShow,formShow
+id,ID,number,InputNumber,false,,80,false,true,false
+name,名称,string,Input,true,"[{""required"":true,""message"":""请输入名称""}]",,true,true,true
+email,邮箱,string,Input,true,"[{""required"":true,""message"":""请输入邮箱""},{""type"":""email"",""message"":""请输入有效的邮箱""}]",,true,true,true
+age,年龄,number,InputNumber,false,"[{""type"":""number"",""min"":1,""max"":120,""message"":""年龄必须在1-120之间""}]",80,false,true,true
+```
+
+## 输出结构
+
+生成到 `.codebuddy/output/pages/{pageName}/`:
+
+```
+{pageName}/
+├── index.ts      # 导出入口
+├── {pageName}.tsx # 主页面组件
+├── action.tsx    # 添加按钮组件
+├── filter.tsx    # 搜索过滤组件
+├── table.tsx     # 表格组件
+└── form.tsx      # 表单弹窗组件
+```
+
+## 工作流程
+
+1. 创建字段配置: `.codebuddy/config/page-{pageName}.csv`
+2. 生成 Store: `npm run gen:store {pageName}`
+3. 生成页面: `npm run gen:page {pageName} {中文名}`
+4. 复制到项目: `src/pages/{pageName}/`
+5. 在 `src/store/index.ts` 中导出 Store
+
+## 生成的页面功能
+
+- 列表展示（分页、排序）
+- 搜索过滤
+- 新增记录
+- 查看详情
+- 编辑记录
+- 删除记录（带确认）
+
+## 依赖
+
+页面依赖对应的 Store，需要先生成：
+- `npm run gen:store {pageName}` 生成 Store
+- Store 导出格式: `STORE.{EntityName}Store.useBase/useUI/useOptions/useDerived`
