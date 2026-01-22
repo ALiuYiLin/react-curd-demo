@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
 import { Form as AntdForm, Input, InputNumber, Modal, Button } from 'antd'
-import { useUI, useDerived, useOptions, ModalMode } from '../../store'
+import { STORE } from '../../store'
+import { ModalMode } from '../../store/user/types'
 
 export function UserFormModal() {
-  const { currentUser, modalMode } = useUI()
-  const { isModalOpen, isViewMode, modalTitle } = useDerived()
-  const { handleCancel, addUser, updateUser } = useOptions()
+  const { currentUser, modalMode } = STORE.UserStore.useUI()
+  const { isModalOpen, isViewMode, modalTitle } = STORE.UserStore.useDerived()
+  const { handleCancel } = STORE.UserStore.useOptions()
+  const { addUser, updateUser } = STORE.UserStore.useBase()
 
   const [form] = AntdForm.useForm()
 

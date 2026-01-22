@@ -1,7 +1,6 @@
 import { Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { useOptions } from '../../store'
-
+import { STORE } from '../../store'
 interface ActionProps {
   buttonText?: string
   buttonType?: 'primary' | 'default' | 'dashed' | 'link' | 'text'
@@ -13,7 +12,7 @@ export function Action({
   buttonType = "primary",
   showIcon = false
 }: ActionProps) {
-  const { handleAdd } = useOptions()
+  const { handleAdd } = STORE.UserStore.useOptions()
 
   return (
     <Button 

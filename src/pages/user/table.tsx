@@ -1,5 +1,5 @@
 import { Table as AntDTable, Button, Space, Popconfirm } from 'antd'
-import { useBase, useUI, useOptions } from '../../store'
+import { STORE } from '../../store'
 
 // 定义用户类型
 interface User {
@@ -12,9 +12,9 @@ interface User {
 }
 
 export function Table() {
-  const { users } = useBase()
-  const { loading } = useUI()
-  const { handleView, handleEdit, deleteUser, setCurrentUser } = useOptions()
+  const { users, deleteUser } = STORE.UserStore.useBase()
+  const { loading, setCurrentUser } = STORE.UserStore.useUI()
+  const { handleView, handleEdit } = STORE.UserStore.useOptions()
 
   const columns = [
     {

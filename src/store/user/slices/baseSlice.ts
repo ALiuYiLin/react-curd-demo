@@ -1,20 +1,9 @@
 import type { StateCreator } from 'zustand'
-import { UserApi } from '../../api'
+import { UserApi } from '../../../api'
 import { message } from 'antd'
-import type { User } from '../types'
-import { type UISlice } from './uiSlice'
+import type { Base, UI } from '../types'
 
-export type BaseSlice  =  {
-  users: User[]
-    
-  fetchUsers: (searchName?: string) => Promise<void>
-  addUser: (user: Omit<User, 'id' | 'created_at' | 'updated_at'>) => Promise<void>
-  updateUser: (id: number, updates: Partial<User>) => Promise<void>
-  deleteUser: (id: number) => Promise<void>
-  setCurrentUser: (user: User | null) => void
-}
-
-export const createBaseSlice: StateCreator<BaseSlice & UISlice, [], [], BaseSlice> = (set, get) => ({
+export const createBaseSlice: StateCreator<Base & UI, [], [], Base> = (set, get) => ({
   users: [],
 
   fetchUsers: async (searchName?: string) => {
@@ -87,6 +76,4 @@ export const createBaseSlice: StateCreator<BaseSlice & UISlice, [], [], BaseSlic
       throw error
     }
   },
-
-  setCurrentUser: (user) => set({ currentUser: user }),
 })

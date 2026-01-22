@@ -1,7 +1,6 @@
 import { Input, Button, Space } from 'antd'
 import { ReloadOutlined } from '@ant-design/icons'
-import { useEffect, useState } from 'react'
-import { useUI, useOptions } from '../../store'
+import { STORE } from '../../store'
 
 const { Search } = Input
 
@@ -16,8 +15,8 @@ export function Filter({
   style = { maxWidth: 400 },
   showResetButton = true
 }: FilterProps) {
-  const { searchText } = useUI()
-  const { handleSearch, handleReset } = useOptions()
+  const { searchText } = STORE.UserStore.useUI()
+  const { handleSearch, handleReset } = STORE.UserStore.useOptions()
   
 
   return (

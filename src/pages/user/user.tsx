@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import { useOptions } from "../../store";
+import { STORE } from "../../store";
 import { UserFormModal } from "./form";
 import { Filter } from "./filter";
 import { Action } from "./action";
 import { Table } from "./table";
 
 export function User() {
-  const { fetchUsers } = useOptions();
+  const { fetchUsers } = STORE.UserStore.useBase();
 
   useEffect(() => {
     fetchUsers();
