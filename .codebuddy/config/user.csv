@@ -1,0 +1,24 @@
+layer,name,type,category,defaultValue,description,params,returnType,dependencies
+base,users,User[],state,[],用户列表,,,
+base,fetchUsers,(searchName?: string) => Promise<void>,action,,,,"[{""name"":""searchName"",""type"":""string"",""optional"":true}]",Promise<void>,ui
+base,addUser,"(user: Omit<User, 'id' | 'created_at' | 'updated_at'>) => Promise<void>",action,,添加用户,"[{""name"":""user"",""type"":""Omit<User, 'id' | 'created_at' | 'updated_at'>""}]",Promise<void>,ui
+base,updateUser,"(id: number, updates: Partial<User>) => Promise<void>",action,,更新用户,"[{""name"":""id"",""type"":""number""},{""name"":""updates"",""type"":""Partial<User>""}]",Promise<void>,ui
+base,deleteUser,(id: number) => Promise<void>,action,,删除用户,"[{""name"":""id"",""type"":""number""}]",Promise<void>,ui
+ui,modalMode,ModalModeType,state,ModalMode.CLOSED,模态框模式,,,
+ui,searchText,string,state,'',搜索文本,,,
+ui,currentUser,User | null,state,null,当前用户,,,
+ui,loading,boolean,state,false,加载状态,,,
+ui,error,string | null,state,null,错误信息,,,
+ui,setCurrentUser,(user: User | null) => void,action,,设置当前用户,"[{""name"":""user"",""type"":""User | null""}]",void,
+derived,isModalOpen,boolean,state,false,模态框是否打开,,,ui
+derived,isViewMode,boolean,state,false,是否查看模式,,,ui
+derived,isEditMode,boolean,state,false,是否编辑模式,,,ui
+derived,isAddMode,boolean,state,false,是否添加模式,,,ui
+derived,isElderly,boolean,state,false,是否为年长的：年龄大于60岁,,,base
+derived,modalTitle,string,state,'',模态框标题,,,ui
+options,handleAdd,() => void,action,,打开添加模态框,,[],void,ui
+options,handleView,(user: User) => void,action,,打开查看模态框,"[{""name"":""user"",""type"":""User""}]",void,ui
+options,handleEdit,(user: User) => void,action,,打开编辑模态框,"[{""name"":""user"",""type"":""User""}]",void,ui
+options,handleCancel,() => void,action,,关闭模态框,,[],void,ui
+options,handleSearch,(value: string) => void,action,,搜索,"[{""name"":""value"",""type"":""string""}]",void,"ui,base"
+options,handleReset,() => void,action,,重置搜索,,[],void,"ui,base"

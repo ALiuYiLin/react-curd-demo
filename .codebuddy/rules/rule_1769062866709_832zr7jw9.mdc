@@ -1,0 +1,106 @@
+---
+description: 根据 CSV 配置文件和 HBS 模板生成 Zustand Store。当用户需要"生成 store"、"生成 hooks"、"根据 CSV 生成代码"时触发。
+alwaysApply: false
+enabled: true
+updatedAt: 2026-01-22T06:21:06.709Z
+provider: 
+---
+
+# Store Generator Skill
+
+通过 Handlebars 模板和 CSV 配置文件自动生成 Zustand Store 代码。
+
+## 使用命令
+
+```bash
+npm run gen:store <storeName>
+# 或
+node .codebuddy/scripts/generate-store.js <storeName>
+```
+
+示例: `npm run gen:store user`
+
+## 文件结构
+
+```
+.codebuddy/
+├── config/
+│   └── {storeName}.csv      # CSV 配置文件
+├── templates/store/         # HBS 模板
+│   ├── types.hbs
+│   ├── store.hbs
+│   ├── index.hbs
+│   ├── slices/
+│   │   ├── baseSlice.hbs
+│   │   ├── uiSlice.hbs
+│   │   └── optionSlice.hbs
+│   └── selectors/
+│       ├── index.hbs
+│       ├── useBase.hbs
+│       ├── useUI.hbs
+│       ├── useDerived.hbs
+│       └── useOptions.hbs
+├── scripts/
+│   └── generate-store.js    # 生成脚本
+└── output/
+    └── {storeName}/         # 生成的代码
+```
+
+## CSV 配置格式
+
+路径: `.codebuddy/config/{storeName}.csv`
+
+| 字段 | 必填 | 说明 | 示例 |
+|------|------|------|------|
+| layer | 是 | 所属层级: base/ui/derived/options | base |
+| name | 是 | 变量或方法名 | users |
+| type | 是 | TypeScript 类型 | User[] |
+| category | 是 | state(状态) / action(方法) | state |
+| defaultValue | 否 | 默认值 | [] |
+| description | 否 | 描述 | 用户列表 |
+| params | 否 | 方法参数(JSON格式) | [{"name":"id","type":"number"}] |
+| returnType | 否 | 方法返回类型 | Promise<void> |
+| dependencies | 否 | 依赖的其他层级(逗号分隔) | ui,base |
+
+## 层级说明
+
+- **base**: 核心数据和 API 操作 (users, fetchUsers, addUser...)
+- **ui**: UI 状态 (modalMode, loading, currentUser, searchText...)
+- **derived**: 计算属性 (isModalOpen, isViewMode, modalTitle...)
+- **options**: 业务操作方法 (handleAdd, handleView, handleSearch...)
+
+## 输出结构
+
+生成到 `.codebuddy/output/{storeName}/`:
+
+```
+{storeName}/
+├── types.ts           # 类型定义 (Base, UI, Derived, Options)
+├── {storeName}Store.ts # Zustand store (useAppStore)
+├── index.ts           # 导出 {StoreName}Store
+├── slices/
+│   ├── baseSlice.ts   # 基础数据层 slice
+│   ├── uiSlice.ts     # UI 状态层 slice
+│   └── optionSlice.ts # 操作方法层 slice
+└── selectors/
+    ├── index.ts       # 统一导出
+    ├── useBase.ts     # 基础数据 selector
+    ├── useUI.ts       # UI 状态 selector
+    ├── useDerived.ts  # 派生状态 selector
+    └── useOptions.ts  # 操作方法 selector
+```
+
+## 工作流程
+
+1. 创建 CSV 配置: `.codebuddy/config/{storeName}.csv`
+2. 运行生成命令: `npm run gen:store {storeName}`
+3. 查看生成代码: `.codebuddy/output/{storeName}/`
+4. 实现 TODO 标记的方法
+5. 复制到 `src/store/{storeName}/`
+
+## 注意事项
+
+1. action 实现标记为 `// TODO: 实现 {name}`，需手动补充业务逻辑
+2. derived 层的计算逻辑在 useDerived selector 中实现
+3. 生成后需要手动导入 API 模块
+4. 参考示例: `src/store/user/`

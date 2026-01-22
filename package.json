@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "gen:hooks": "tsx .codebuddy/skills/hooks-generator/scripts/generate-hooks.ts"
+    "gen:store": "node .codebuddy/scripts/generate-store.js"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",

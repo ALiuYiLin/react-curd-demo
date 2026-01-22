@@ -1,0 +1,10 @@
+import type { Options } from "../types";
+import { useAppStore } from "../{{storeName}}Store";
+
+export const useOptions = (): Options => {
+  return {
+{{#each options}}
+    {{name}}: useAppStore((state) => state.{{name}}),
+{{/each}}
+  };
+};

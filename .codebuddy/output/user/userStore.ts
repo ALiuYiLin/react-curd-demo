@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { createUISlice } from './slices/uiSlice'
-import  { createOptionSlice } from './slices/optionSlice'
+import { createOptionSlice } from './slices/optionSlice'
 import { createBaseSlice } from './slices/baseSlice'
 import type { Base, Options, UI } from './types'
 

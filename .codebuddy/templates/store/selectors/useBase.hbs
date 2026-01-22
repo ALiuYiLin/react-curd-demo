@@ -1,0 +1,10 @@
+import type { Base } from "../types";
+import { useAppStore } from "../{{storeName}}Store";
+
+export const useBase = (): Base => {
+  return {
+{{#each base}}
+    {{name}}: useAppStore((state) => state.{{name}}),
+{{/each}}
+  }
+}

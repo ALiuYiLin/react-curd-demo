@@ -1,0 +1,10 @@
+import { MODAL_TITLES, ModalMode, type Derived } from "../types";
+import { useAppStore } from "../{{storeName}}Store";
+
+export const useDerived = (): Derived => {
+  return {
+{{#each derived}}
+    {{{name}}}: useAppStore((state) => {{{expression}}}),
+{{/each}}
+  };
+};

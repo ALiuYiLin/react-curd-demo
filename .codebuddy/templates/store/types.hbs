@@ -1,0 +1,55 @@
+// 实体类型
+export interface {{EntityName}} {
+  id: number;
+  // TODO: 定义实体字段
+}
+
+// 模态框模式
+export const ModalMode = {
+  CLOSED: "closed",
+  ADD: "add",
+  EDIT: "edit",
+  VIEW: "view",
+} as const;
+
+export type ModalModeType = (typeof ModalMode)[keyof typeof ModalMode];
+
+// 模态框标题映射
+export const MODAL_TITLES: Record<ModalModeType, string> = {
+  [ModalMode.CLOSED]: "",
+  [ModalMode.ADD]: "添加{{entityLabel}}",
+  [ModalMode.EDIT]: "编辑{{entityLabel}}",
+  [ModalMode.VIEW]: "查看{{entityLabel}}",
+};
+
+{{#if base}}
+export type Base = {
+{{#each base}}
+  {{{name}}}: {{{type}}};
+{{/each}}
+};
+{{/if}}
+
+{{#if ui}}
+export type UI = {
+{{#each ui}}
+  {{{name}}}: {{{type}}};
+{{/each}}
+};
+{{/if}}
+
+{{#if derived}}
+export type Derived = {
+{{#each derived}}
+  {{{name}}}: {{{type}}};
+{{/each}}
+};
+{{/if}}
+
+{{#if options}}
+export type Options = {
+{{#each options}}
+  {{{name}}}: {{{type}}};
+{{/each}}
+};
+{{/if}}

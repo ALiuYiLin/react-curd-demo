@@ -1,0 +1,10 @@
+import type { UI } from "../types";
+import { useAppStore } from "../{{storeName}}Store";
+
+export const useUI = (): UI => {
+  return {
+{{#each ui}}
+    {{name}}: useAppStore((state) => state.{{name}}),
+{{/each}}
+  };
+};

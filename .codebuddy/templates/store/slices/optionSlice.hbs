@@ -1,0 +1,15 @@
+import type { StateCreator } from "zustand";
+import { ModalMode, type Options, type Base, type UI } from "../types";
+
+export const createOptionSlice: StateCreator<
+  Options & Base & UI,
+  [],
+  [],
+  Options
+> = (set, get) => ({
+{{#each optionActions}}
+  {{{name}}}: ({{#each params}}{{{name}}}{{#unless @last}}, {{/unless}}{{/each}}) => {
+    // TODO: 实现 {{{name}}}{{#if description}} - {{{description}}}{{/if}}
+  },
+{{/each}}
+})

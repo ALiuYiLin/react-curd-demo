@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { createUISlice } from './slices/uiSlice'
-import  { createOptionSlice } from './slices/optionSlice'
+import { createOptionSlice } from './slices/optionSlice'
 import { createBaseSlice } from './slices/baseSlice'
 import type { Base, Options, UI } from './types'
 
@@ -14,6 +14,6 @@ export const useAppStore = create<AppState>()(
       ...createUISlice(...args),
       ...createOptionSlice(...args),
     }),
-    { name: 'app-store-user' }
+    { name: 'app-store-{{storeName}}' }
   )
 )
