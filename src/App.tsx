@@ -1,17 +1,6 @@
-import { Flex } from 'antd'
-import './App.css'
-import { User } from './pages/user'
-import { UserStats } from './components/UserStats'
+// App.tsx is deprecated, use router instead
+// See src/router/index.tsx for route configuration
 
-function App() {
-  return (
-    <Flex className="App h-screen w-screen">
-      <Flex className='w-75 h-full bg-gray-50 border-r'>
-        <UserStats />
-      </Flex>
-      <User />
-    </Flex>
-  )
+export default function App() {
+  return null
 }
-
-export default App
