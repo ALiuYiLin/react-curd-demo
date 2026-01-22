@@ -1,0 +1,12 @@
+field,label,type,component,required,rules,width,searchable,tableShow,formShow
+id,ID,number,InputNumber,false,,80,false,true,false
+name,线索名称,string,Input,true,"[{""required"":true,""message"":""请输入线索名称""}]",,true,true,true
+phone,电话,string,Input,false,,,true,true,true
+email,邮箱,string,Input,false,"[{""type"":""email"",""message"":""请输入有效的邮箱地址""}]",,false,true,true
+company,公司名称,string,Input,false,,,true,true,true
+source,来源,string,Select,false,,,true,true,true
+status,状态,string,Select,false,,,true,true,true
+priority,优先级,string,Select,false,,,true,true,true
+assigned_to,负责人,string,Input,false,,,true,true,true
+remark,备注,string,Input,false,,,false,true,true
+followed_at,跟进时间,string,DatePicker,false,,,false,false,true

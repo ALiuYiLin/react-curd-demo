@@ -13,20 +13,22 @@ provider:
 ## 使用命令
 
 ```bash
-npm run gen:store <storeName>
-# 或
-node .codebuddy/scripts/generate-store.js <storeName>
+node .codebuddy/skills/store-generator/scripts/generate.js <storeName>
 ```
 
-示例: `npm run gen:store user`
+示例: `node .codebuddy/skills/store-generator/scripts/generate.js user`
 
 ## 文件结构
 
 ```
-.codebuddy/
-├── config/
-│   └── {storeName}.csv      # CSV 配置文件
-├── templates/store/         # HBS 模板
+config/store/
+└── {storeName}.csv           # CSV 配置文件
+
+.codebuddy/skills/store-generator/
+├── SKILL.md
+├── scripts/
+│   └── generate.js           # 生成脚本
+├── templates/                # HBS 模板
 │   ├── types.hbs
 │   ├── store.hbs
 │   ├── index.hbs
@@ -40,15 +42,13 @@ node .codebuddy/scripts/generate-store.js <storeName>
 │       ├── useUI.hbs
 │       ├── useDerived.hbs
 │       └── useOptions.hbs
-├── scripts/
-│   └── generate-store.js    # 生成脚本
 └── output/
-    └── {storeName}/         # 生成的代码
+    └── {storeName}/          # 生成的代码
 ```
 
 ## CSV 配置格式
 
-路径: `.codebuddy/config/{storeName}.csv`
+路径: `config/store/{storeName}.csv`
 
 | 字段 | 必填 | 说明 | 示例 |
 |------|------|------|------|
@@ -71,7 +71,7 @@ node .codebuddy/scripts/generate-store.js <storeName>
 
 ## 输出结构
 
-生成到 `.codebuddy/output/{storeName}/`:
+生成到 `.codebuddy/skills/store-generator/output/{storeName}/`:
 
 ```
 {storeName}/
@@ -92,9 +92,9 @@ node .codebuddy/scripts/generate-store.js <storeName>
 
 ## 工作流程
 
-1. 创建 CSV 配置: `.codebuddy/config/{storeName}.csv`
-2. 运行生成命令: `npm run gen:store {storeName}`
-3. 查看生成代码: `.codebuddy/output/{storeName}/`
+1. 创建 CSV 配置: `config/store/{storeName}.csv`
+2. 运行生成命令: `node .codebuddy/skills/store-generator/scripts/generate.js {storeName}`
+3. 查看生成代码: `.codebuddy/skills/store-generator/output/{storeName}/`
 4. 实现 TODO 标记的方法
 5. 复制到 `src/store/{storeName}/`
 
