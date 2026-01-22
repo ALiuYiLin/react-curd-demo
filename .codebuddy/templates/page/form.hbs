@@ -4,7 +4,7 @@ import { STORE } from '@/store'
 import { ModalMode } from '@/store/{{pageName}}/types'
 
 export function {{EntityName}}FormModal() {
-  const { currentUser, modalMode } = STORE.{{EntityName}}Store.useUI()
+  const { current{{EntityName}}, modalMode } = STORE.{{EntityName}}Store.useUI()
   const { isModalOpen, isViewMode, modalTitle } = STORE.{{EntityName}}Store.useDerived()
   const { handleCancel } = STORE.{{EntityName}}Store.useOptions()
   const { add{{EntityName}}, update{{EntityName}} } = STORE.{{EntityName}}Store.useBase()
@@ -13,18 +13,18 @@ export function {{EntityName}}FormModal() {
 
   useEffect(() => {
     if (modalMode === ModalMode.VIEW || modalMode === ModalMode.EDIT) {
-      form.setFieldsValue(currentUser)
+      form.setFieldsValue(current{{EntityName}})
     } else if (modalMode === ModalMode.ADD) {
       form.resetFields()
     }
-  }, [modalMode, currentUser, form])
+  }, [modalMode, current{{EntityName}}, form])
 
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields()
       
-      if (modalMode === ModalMode.EDIT && currentUser) {
-        await update{{EntityName}}(currentUser.id, values)
+      if (modalMode === ModalMode.EDIT && current{{EntityName}}) {
+        await update{{EntityName}}(current{{EntityName}}.id, values)
       } else if (modalMode === ModalMode.ADD) {
         await add{{EntityName}}(values)
       }

@@ -4,9 +4,11 @@ export { default as api } from './config'
 // API 类
 export { UserApi } from './userApi'
 export { CommentApi } from './commentApi'
+export { ProductApi } from './productApi'
 
 // 类型定义
 export * from './types'
+export type { Product, CreateProductRequest, UpdateProductRequest, GetProductsParams } from './productApi'
 
 // 便捷方法
 export const userApi = {
@@ -21,4 +23,13 @@ export const userApi = {
 export const commentApi = {
   getAll: () => import('./commentApi').then(m => m.CommentApi.getComments()),
   getById: (id: number) => import('./commentApi').then(m => m.CommentApi.getCommentById(id)),
+}
+
+export const productApi = {
+  getAll: (params?: any) => import('./productApi').then(m => m.ProductApi.getProducts(params)),
+  getById: (id: number) => import('./productApi').then(m => m.ProductApi.getProductById(id)),
+  create: (data: any) => import('./productApi').then(m => m.ProductApi.createProduct(data)),
+  update: (id: number, data: any) => import('./productApi').then(m => m.ProductApi.updateProduct(id, data)),
+  delete: (id: number) => import('./productApi').then(m => m.ProductApi.deleteProduct(id)),
+  searchByName: (name: string) => import('./productApi').then(m => m.ProductApi.searchProductsByName(name)),
 }

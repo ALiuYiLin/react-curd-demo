@@ -1,0 +1,9 @@
+field,label,type,component,required,rules,width,searchable,tableShow,formShow
+id,ID,number,InputNumber,false,,80,false,true,false
+name,产品名称,string,Input,true,"[{""required"":true,""message"":""请输入产品名称""}]",,true,true,true
+type,类型,string,Input,true,"[{""required"":true,""message"":""请输入类型""}]",,true,true,true
+description,描述,string,Input,false,,,false,false,true
+price,价格,number,InputNumber,true,"[{""required"":true,""message"":""请输入价格""}]",100,false,true,true
+stock,库存,number,InputNumber,true,"[{""required"":true,""message"":""请输入库存""}]",80,false,true,true
+status,状态,string,Input,false,,,true,true,true
+image_url,图片地址,string,Input,false,,,false,false,true
